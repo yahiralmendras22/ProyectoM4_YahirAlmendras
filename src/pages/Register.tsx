@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../features/auth/AuthContext';
 
 export function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const { signUp, signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
 
@@ -15,7 +19,22 @@ export function Register() {
       return;
     }
 
-    console.log({ email, password });
+    try {
+      await signUp(email, password);
+      navigate('/tasks');
+    } catch {
+      setError('No se pudo completar el registro');
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setError('');
+    try {
+      await signInWithGoogle();
+      navigate('/tasks');
+    } catch {
+      setError('No se pudo registrar con Google');
+    }
   }
 
   return (
@@ -55,6 +74,7 @@ export function Register() {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <button type="submit">Registrarse</button>
       </form>
+      <button onClick={handleGoogleSignIn}>Registrarse con Google</button>
     </div>
   );
 }
