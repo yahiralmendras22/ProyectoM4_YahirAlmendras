@@ -1,16 +1,25 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Task, NewTask } from '../types/task';
+import { useAuth } from '../features/auth/AuthContext';
 
 export function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate('/login');
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const newTask: NewTask = {
-      userId: 'temp-user',
+      userId: user?.uid ?? 'temp-user',
       title,
       description,
       completed: false,
@@ -32,6 +41,8 @@ export function Tasks() {
   return (
     <div>
       <h1>Mis tareas</h1>
+      <p>Bienvenido, {user?.email}</p>
+      <button onClick={handleLogout}>Cerrar sesión</button>
 
       <form onSubmit={handleSubmit}>
         <div>
