@@ -4,6 +4,7 @@ import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { Tasks } from '../pages/Tasks';
 import { RequireAuth } from '../components/RequireAuth';
+import { Calendar } from '../pages/Calendar';
 
 export function AppRoutes() {
   return (
@@ -11,6 +12,7 @@ export function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/calendar" element={<Calendar />} />
       <Route
         path="/tasks"
         element={

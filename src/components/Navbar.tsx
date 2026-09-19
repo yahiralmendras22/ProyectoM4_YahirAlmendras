@@ -9,7 +9,9 @@ export function Navbar() {
             {' | '}
             <Link to="/register">Register</Link>
             {' | '}
-            <Link to="/tasks">Tasks</Link>
+            <Link to="/tasks">Tasks</Link>  
+            {' | '}
+            <Link to="/calendar">Calendario</Link>
         </nav>
     );
 }

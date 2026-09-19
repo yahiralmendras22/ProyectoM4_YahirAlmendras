@@ -1,41 +1,63 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Task, NewTask } from '../types/task';
+import type { Task } from '../types/task';
 import { useAuth } from '../features/auth/AuthContext';
+import {
+  subscribeToTasks,
+  createTask,
+  toggleTaskCompleted,
+  deleteTask,
+} from '../services/tasksService';
 
 export function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribe = subscribeToTasks(user.uid, (updatedTasks) => {
+      setTasks(updatedTasks);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   async function handleLogout() {
     await logout();
     navigate('/login');
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!user) return;
 
-    const newTask: NewTask = {
-      userId: user?.uid ?? 'temp-user',
+    await createTask({
+      userId: user.uid,
       title,
       description,
       completed: false,
       priority: 'medium',
-      dueDate: null,
-    };
+      dueDate: dueDate ? new Date(dueDate) : null,
+    });
 
-    const taskWithId: Task = {
-      ...newTask,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-    };
-
-    setTasks([...tasks, taskWithId]);
     setTitle('');
     setDescription('');
+    setDueDate('');
+  }
+
+  async function handleToggle(task: Task) {
+    await toggleTaskCompleted(task.id, !task.completed);
+  }
+
+  async function handleDelete(taskId: string) {
+    await deleteTask(taskId);
   }
 
   return (
@@ -63,17 +85,43 @@ export function Tasks() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
+        <div>
+          <label htmlFor="dueDate">Fecha de vencimiento</label>
+          <input
+            id="dueDate"
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+        </div>
         <button type="submit">Agregar tarea</button>
       </form>
 
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>
-            {task.description && ` - ${task.description}`}
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <p>Cargando tareas...</p>
+      ) : (
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id}>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => handleToggle(task)}
+              />
+              <strong
+                style={{
+                  textDecoration: task.completed ? 'line-through' : 'none',
+                }}
+              >
+                {task.title}
+              </strong>
+              {task.description && ` - ${task.description}`}
+              {task.dueDate && ` (vence: ${task.dueDate.toLocaleDateString()})`}
+              <button onClick={() => handleDelete(task.id)}>Eliminar</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

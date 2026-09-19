@@ -1,0 +1,955 @@
+/* ==========================================================================
+   MateCode Tasks - Sistema de Diseño & Estilos Globales
+   Arquitectura Mobile-First
+   ========================================================================== */
+
+/* Tipografía moderna desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES & DESIGN TOKENS
+   Paleta de productividad moderna: Azul/Índigo, Violeta y Verde Esmeralda
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colores Principales (Índigo & Violeta) */
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-light: #eef2ff;
+  --color-primary-glow: rgba(99, 102, 241, 0.35);
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+
+  /* Acento de Éxito / Completado (Verde Esmeralda) */
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-success-light: #ecfdf5;
+
+  /* Peligro / Eliminar (Rojo Carmesí suave) */
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-light: #fef2f2;
+  --color-danger-border: #fecaca;
+
+  /* Fondos y Superficies */
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-surface-subtle: #f1f5f9;
+  --bg-navbar: rgba(255, 255, 255, 0.88);
+
+  /* Texto */
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --text-white: #ffffff;
+
+  /* Bordes */
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-focus: #818cf8;
+
+  /* Sombras sutiles y elevación */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 6px 12px -2px rgba(15, 23, 42, 0.08), 0 3px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.1), 0 6px 12px -4px rgba(15, 23, 42, 0.05);
+
+  /* Bordes redondeados */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transiciones */
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & ESTILOS BASE (MOBILE-FIRST)
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-top: 72px; /* Margen superior para compensar el Navbar fijo */
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 72px);
+}
+
+/* Tipografía */
+h1 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* --------------------------------------------------------------------------
+   3. LAYOUT & CONTENEDOR DE PÁGINAS (MOBILE-FIRST)
+   -------------------------------------------------------------------------- */
+/* Contenedor centralizado para Home, Login, Register y Tasks */
+#root > div:not(nav),
+.page-container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  animation: pageFadeIn 0.3s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para página de inicio (Home) */
+.home-container,
+.hero-section {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-top: 1rem;
+}
+
+.home-container h1 {
+  font-size: 1.85rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. NAVBAR FIJO
+   -------------------------------------------------------------------------- */
+nav,
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: var(--bg-navbar);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Logotipo / Marca */
+nav strong,
+.navbar-brand {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Agrupador de links */
+.nav-links,
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Links individuales del Navbar */
+nav a,
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+nav a:hover,
+.nav-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+nav a.active,
+.nav-link.active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* --------------------------------------------------------------------------
+   5. FORMULARIOS & TARJETAS
+   -------------------------------------------------------------------------- */
+form,
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* Grupos de campo (label + input/textarea) */
+form > div,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+/* Campos de entrada */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-light);
+}
+
+/* Interacción de inputs: Hover y Focus */
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+textarea:hover {
+  border-color: var(--border-hover);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  background-color: #ffffff;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   6. BOTONES (ESTADOS HOVER, FOCUS & ACTIVE)
+   -------------------------------------------------------------------------- */
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-smooth);
+  line-height: 1.25;
+}
+
+button:focus-visible,
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+}
+
+/* Botón Principal (Submit de formularios y .btn-primary) */
+button[type="submit"],
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--text-white);
+  box-shadow: 0 4px 12px var(--color-primary-glow);
+  width: 100%;
+}
+
+button[type="submit"]:hover,
+.btn-primary:hover {
+  background: var(--gradient-hover);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.45);
+}
+
+button[type="submit"]:active,
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Botón Secundario / Botón de Google (ubicado luego del formulario) */
+form + button,
+.btn-secondary,
+.btn-google {
+  width: 100%;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-color);
+  box-shadow: var(--shadow-xs);
+  margin-top: -0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+form + button:hover,
+.btn-secondary:hover,
+.btn-google:hover {
+  background-color: var(--bg-surface-subtle);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+form + button:active,
+.btn-secondary:active,
+.btn-google:active {
+  transform: translateY(0);
+}
+
+/* Botón de Eliminar (dentro de tareas) */
+li button,
+.task-item button,
+.btn-danger {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid transparent;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.825rem;
+  border-radius: var(--radius-sm);
+  width: auto;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+li button:hover,
+.task-item button:hover,
+.btn-danger:hover {
+  background-color: var(--color-danger);
+  color: var(--text-white);
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+li button:active,
+.task-item button:active,
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+/* Botón Cerrar Sesión */
+.btn-logout,
+h1 + p + button {
+  align-self: flex-start;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.825rem;
+  padding: 0.45rem 0.95rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-logout:hover,
+h1 + p + button:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+  background-color: var(--color-danger-light);
+}
+
+/* Alertas de error */
+p[style*="red"],
+.error-message {
+  color: var(--color-danger) !important;
+  background-color: var(--color-danger-light);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   7. LISTA DE TAREAS & ITEMS (TASKS)
+   -------------------------------------------------------------------------- */
+ul,
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+li,
+.task-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: all var(--transition-smooth);
+}
+
+li:hover,
+.task-item:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Checkbox Moderno (Verde Esmeralda) */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  background-color: #ffffff;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:hover {
+  border-color: var(--color-success);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.72rem;
+  border: solid white;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+}
+
+/* Contenido / Texto de la tarea */
+li > strong,
+.task-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  word-break: break-word;
+  transition: all var(--transition-fast);
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-description {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+/* Tareas Completadas: Opacidad reducida, fondo suave y texto tachado */
+li:has(input[type="checkbox"]:checked),
+li.completed,
+.task-item.completed {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  opacity: 0.65;
+}
+
+li:has(input[type="checkbox"]:checked) strong,
+li.completed strong,
+.task-item.completed .task-title {
+  text-decoration: line-through !important;
+  color: var(--text-light) !important;
+}
+
+li:has(input[type="checkbox"]:checked) .task-description,
+li.completed .task-description {
+  text-decoration: line-through;
+  color: #cbd5e1;
+}
+
+/* Estados de carga / listas vacías */
+.loading-state,
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 2.5rem 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   8. MEDIA QUERIES (MOBILE-FIRST BREAKPOINTS)
+   -------------------------------------------------------------------------- */
+
+/* Tablets y Pantallas Medianas (min-width: 640px) */
+@media (min-width: 640px) {
+  body {
+    padding-top: 84px;
+  }
+
+  nav,
+  .navbar {
+    height: 72px;
+    padding: 0 2rem;
+  }
+
+  nav strong,
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+
+  nav a,
+  .nav-link {
+    font-size: 0.925rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  #root > div:not(nav),
+  .page-container {
+    max-width: 620px;
+    padding: 1.75rem 1.5rem 4rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  form,
+  .card {
+    padding: 1.75rem;
+    gap: 1.35rem;
+  }
+
+  li,
+  .task-item {
+    padding: 1rem 1.25rem;
+  }
+}
+
+/* Escritorio y Pantallas Grandes (min-width: 1024px) */
+@media (min-width: 1024px) {
+  #root > div:not(nav),
+  .page-container {
+    max-width: 720px;
+    padding: 2.5rem 2rem 5rem;
+  }
+
+  /* Formulario de agregar tarea optimizado para pantallas grandes */
+  .tasks-container form {
+    padding: 2rem;
+  }
+
+  li,
+  .task-item {
+    padding: 1.1rem 1.35rem;
+  }
+
+  li:hover,
+  .task-item:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. CALENDARIO MENSUAL (MOBILE-FIRST)
+   -------------------------------------------------------------------------- */
+.calendar-page {
+  width: 100%;
+  max-width: 1020px !important;
+  margin: 0 auto;
+}
+
+/* Cabecera y controles del calendario */
+.calendar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.calendar-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
+}
+
+.calendar-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* Barra de controles de navegación (Mes anterior, Hoy, Mes siguiente) */
+.calendar-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-card);
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xs);
+  align-self: flex-start;
+}
+
+.calendar-btn-nav {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: grid;
+  place-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-main);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calendar-btn-nav:hover {
+  background-color: var(--bg-surface-subtle);
+  color: var(--color-primary);
+}
+
+.calendar-btn-today {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.825rem;
+  font-weight: 600;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calendar-btn-today:hover {
+  background-color: var(--color-primary);
+  color: var(--text-white);
+}
+
+/* Envoltura con soporte Mobile-First (Scroll horizontal suave en móviles) */
+.calendar-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.calendar-grid {
+  min-width: 640px; /* Evita que la grilla de 7 columnas colapse en pantallas pequeñas */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabecera de los días de la semana */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  padding: 0.75rem 0;
+}
+
+.calendar-weekday {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Contenedor de las celdas */
+.calendar-days-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: var(--border-color);
+  gap: 1px; /* Bordes sutiles entre celdas */
+}
+
+/* Celda individual de día */
+.calendar-day {
+  background-color: var(--bg-card);
+  min-height: 95px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: background-color var(--transition-fast);
+}
+
+.calendar-day:hover {
+  background-color: #fafbfe;
+}
+
+/* Días de otro mes */
+.calendar-day-other-month {
+  background-color: #fcfcfd;
+  opacity: 0.45;
+}
+
+.calendar-day-other-month .calendar-day-number {
+  color: var(--text-light);
+}
+
+/* Día actual (Hoy) */
+.calendar-day-today {
+  background-color: #f5f7ff;
+}
+
+.calendar-day-today .calendar-day-number {
+  background: var(--gradient-primary);
+  color: var(--text-white);
+  border-radius: var(--radius-full);
+  width: 24px;
+  height: 24px;
+  display: inline-grid;
+  place-content: center;
+  font-weight: 700;
+}
+
+/* Cabecera dentro de la celda de día */
+.calendar-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.calendar-day-number {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.calendar-day-badge {
+  font-size: 0.675rem;
+  font-weight: 700;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-full);
+}
+
+/* Lista apilada de tareas */
+.calendar-day-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-y: auto;
+  max-height: 110px;
+}
+
+/* Tarea individual dentro del día */
+.calendar-task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-main);
+  border-left: 3px solid var(--color-primary);
+  transition: all var(--transition-fast);
+  cursor: default;
+}
+
+.calendar-task-item:hover {
+  transform: translateX(1px);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Variantes por prioridad */
+.calendar-task-item.priority-high {
+  border-left-color: var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+
+.calendar-task-item.priority-medium {
+  border-left-color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+.calendar-task-item.priority-low {
+  border-left-color: var(--color-success);
+  background-color: var(--color-success-light);
+}
+
+/* Tarea completada */
+.calendar-task-item.completed {
+  opacity: 0.55;
+  background-color: #f1f5f9;
+  border-left-color: var(--text-light);
+}
+
+.calendar-task-item.completed .calendar-task-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.calendar-task-status-icon {
+  font-size: 0.7rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.calendar-task-item.completed .calendar-task-status-icon {
+  color: var(--color-success);
+}
+
+.calendar-task-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* Ajustes Responsivos para Tablets y Desktop */
+@media (min-width: 640px) {
+  .calendar-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .calendar-controls {
+    align-self: auto;
+  }
+
+  .calendar-title {
+    font-size: 2rem;
+  }
+
+  .calendar-day {
+    min-height: 110px;
+    padding: 0.65rem;
+  }
+
+  .calendar-weekday {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .calendar-day {
+    min-height: 125px;
+  }
+}
+
