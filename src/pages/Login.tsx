@@ -55,10 +55,12 @@ export function Login() {
             required
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         <button type="submit">Iniciar sesión</button>
       </form>
-      <button onClick={handleGoogleSignIn}>Iniciar sesión con Google</button>
+      <button className="btn-google" onClick={handleGoogleSignIn}>
+        Iniciar sesión con Google
+      </button>
     </div>
   );
 }

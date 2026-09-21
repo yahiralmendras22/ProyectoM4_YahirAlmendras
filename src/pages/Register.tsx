@@ -71,10 +71,12 @@ export function Register() {
             required
           />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         <button type="submit">Registrarse</button>
       </form>
-      <button onClick={handleGoogleSignIn}>Registrarse con Google</button>
+      <button className="btn-google" onClick={handleGoogleSignIn}>
+        Registrarse con Google
+      </button>
     </div>
   );
 }

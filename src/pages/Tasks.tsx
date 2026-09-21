@@ -61,10 +61,12 @@ export function Tasks() {
   }
 
   return (
-    <div>
+    <div className="tasks-container">
       <h1>Mis tareas</h1>
       <p>Bienvenido, {user?.email}</p>
-      <button onClick={handleLogout}>Cerrar sesión</button>
+      <button className="btn-logout" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -98,25 +100,29 @@ export function Tasks() {
       </form>
 
       {loading ? (
-        <p>Cargando tareas...</p>
+        <p className="loading-state">Cargando tareas...</p>
+      ) : tasks.length === 0 ? (
+        <p className="empty-state">Todavía no tenés tareas creadas.</p>
       ) : (
-        <ul>
+        <ul className="task-list">
           {tasks.map((task) => (
-            <li key={task.id}>
+            <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
               <input
                 type="checkbox"
                 checked={task.completed}
                 onChange={() => handleToggle(task)}
               />
-              <strong
-                style={{
-                  textDecoration: task.completed ? 'line-through' : 'none',
-                }}
-              >
-                {task.title}
-              </strong>
-              {task.description && ` - ${task.description}`}
-              {task.dueDate && ` (vence: ${task.dueDate.toLocaleDateString()})`}
+              <div className="task-content">
+                <span className="task-title">{task.title}</span>
+                {task.description && (
+                  <span className="task-description">{task.description}</span>
+                )}
+                {task.dueDate && (
+                  <span className="task-description">
+                    Vence: {task.dueDate.toLocaleDateString()}
+                  </span>
+                )}
+              </div>
               <button onClick={() => handleDelete(task.id)}>Eliminar</button>
             </li>
           ))}
