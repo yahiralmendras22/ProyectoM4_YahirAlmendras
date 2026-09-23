@@ -15,6 +15,8 @@ export function Tasks() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -60,6 +62,44 @@ export function Tasks() {
     await deleteTask(taskId);
   }
 
+  async function handleSendSummary() {
+    if (!user?.email) return;
+
+    setSendingEmail(true);
+    setEmailStatus('idle');
+
+    const pending = tasks.filter((t) => !t.completed);
+    const completed = tasks.filter((t) => t.completed);
+
+    const summaryLines = [
+      `Resumen de tus tareas (${tasks.length} en total):`,
+      '',
+      `Pendientes (${pending.length}):`,
+      ...pending.map((t) => `- ${t.title}`),
+      '',
+      `Completadas (${completed.length}):`,
+      ...completed.map((t) => `- ${t.title}`),
+    ];
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: user.email,
+          summary: summaryLines.join('\n'),
+        }),
+      });
+
+      if (!response.ok) throw new Error('Error en el envío');
+      setEmailStatus('success');
+    } catch {
+      setEmailStatus('error');
+    } finally {
+      setSendingEmail(false);
+    }
+  }
+
   return (
     <div className="tasks-container">
       <h1>Mis tareas</h1>
@@ -67,6 +107,14 @@ export function Tasks() {
       <button className="btn-logout" onClick={handleLogout}>
         Cerrar sesión
       </button>
+
+      <button className="btn-email" onClick={handleSendSummary} disabled={sendingEmail}>
+        {sendingEmail ? 'Enviando...' : 'Enviar resumen por email'}
+      </button>
+      {emailStatus === 'success' && (
+        <p className="success-message">¡Resumen enviado! Revisá tu email.</p>
+      )}
+      {emailStatus === 'error' && <p className="error-message">No se pudo enviar el resumen</p>}
 
       <form onSubmit={handleSubmit}>
         <div>
