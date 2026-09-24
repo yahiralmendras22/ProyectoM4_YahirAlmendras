@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export function Navbar() {
   return (
     <nav>
-      <strong>MateCode Tasks</strong>
+      <Link to="/" className="navbar-brand">MateCode Tasks</Link>
       <div className="nav-links">
         <Link to="/login">Login</Link>
         <Link to="/register">Register</Link>
