@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 520" role="img" xmlns="http://www.w3.org/2000/svg"><title>Ilustración de un mate con bombilla</title><desc>Un mate de cuero con yerba verde y bombilla plateada</desc>
+<defs>
+  <linearGradient id="gourdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#a9713f"/>
+    <stop offset="55%" stop-color="#8a5a30"/>
+    <stop offset="100%" stop-color="#6b4423"/>
+  </linearGradient>
+  <linearGradient id="yerbaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#8fbf5a"/>
+    <stop offset="100%" stop-color="#5e9c3a"/>
+  </linearGradient>
+  <linearGradient id="bombillaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#e8e8e8"/>
+    <stop offset="50%" stop-color="#b8bcc2"/>
+    <stop offset="100%" stop-color="#8c9096"/>
+  </linearGradient>
+</defs>
+<ellipse cx="340" cy="470" rx="120" ry="16" fill="#000000" opacity="0.10"/>
+<ellipse cx="340" cy="452" rx="92" ry="18" fill="#5a3a1f"/>
+<path d="M 250 300 C 248 250, 260 210, 300 195 C 320 187, 360 187, 380 195 C 420 210, 432 250, 430 300 C 434 350, 420 410, 380 438 C 355 456, 325 456, 300 438 C 260 410, 246 350, 250 300 Z" fill="url(#gourdGrad)" stroke="#4a2f18" stroke-width="2"/>
+<path d="M 285 230 C 275 270, 275 340, 295 400" fill="none" stroke="#c99a63" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+<path d="M 252 320 C 300 335, 380 335, 428 320" fill="none" stroke="#4a2f18" stroke-width="4" opacity="0.5"/>
+<path d="M 250 300 C 300 316, 380 316, 430 300" fill="none" stroke="#4a2f18" stroke-width="4" opacity="0.5"/>
+<ellipse cx="340" cy="192" rx="58" ry="20" fill="#c99a63" stroke="#4a2f18" stroke-width="2.5"/>
+<ellipse cx="340" cy="188" rx="50" ry="15" fill="#e8c893"/>
+<path d="M 296 188 C 300 172, 320 160, 340 160 C 362 160, 382 172, 386 188 C 386 196, 364 200, 340 200 C 316 200, 296 196, 296 188 Z" fill="url(#yerbaGrad)"/>
+<circle cx="315" cy="178" r="3" fill="#3f6b26"/>
+<circle cx="330" cy="172" r="2.5" fill="#3f6b26"/>
+<circle cx="352" cy="176" r="3" fill="#3f6b26"/>
+<circle cx="365" cy="184" r="2.5" fill="#3f6b26"/>
+<circle cx="342" cy="188" r="2.5" fill="#3f6b26"/>
+<g>
+  <line x1="358" y1="178" x2="460" y2="72" stroke="url(#bombillaGrad)" stroke-width="11" stroke-linecap="round"/>
+  <line x1="358" y1="178" x2="460" y2="72" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+  <ellipse cx="460" cy="72" rx="9" ry="7" fill="#cfd3d8" stroke="#8c9096" stroke-width="1.5" transform="rotate(-42 460 72)"/>
+  <ellipse cx="358" cy="178" rx="8" ry="6" fill="#b8bcc2" stroke="#8c9096" stroke-width="1"/>
+</g>
+<path d="M 300 130 C 296 118, 306 112, 302 100 C 298 90, 308 84, 304 74" fill="none" stroke="#c9c9c9" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+<path d="M 322 120 C 318 108, 328 102, 324 90" fill="none" stroke="#c9c9c9" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+</svg>
