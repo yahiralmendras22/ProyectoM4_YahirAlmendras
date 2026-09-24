@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Task } from '../types/task';
 import { useAuth } from '../features/auth/AuthContext';
-import { subscribeToTasks } from '../services/tasksService';
+import { useTasks } from '../hooks/useTasks';
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
@@ -30,26 +30,12 @@ interface CalendarDay {
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(() => new Date());
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-
-  // Suscripción en tiempo real a las tareas del usuario
-  useEffect(() => {
-    if (!user) return;
-
-    const unsubscribe = subscribeToTasks(user.uid, (updatedTasks) => {
-      setTasks(updatedTasks);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [user]);
+  const { tasks, loading } = useTasks(user?.uid);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Navegación de meses
   const handlePrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
   };
@@ -62,8 +48,6 @@ export function Calendar() {
     setCurrentDate(new Date());
   };
 
-  // Mapear y agrupar tareas por clave de fecha (YYYY-MM-DD)
-  // Requisito 6: Las tareas sin dueDate no se incluyen
   const tasksByDate = useMemo(() => {
     const map = new Map<string, Task[]>();
 
@@ -82,22 +66,17 @@ export function Calendar() {
     return map;
   }, [tasks]);
 
-  // Generación pura de la grilla mensual (Lunes a Domingo)
   const calendarDays = useMemo(() => {
     const days: CalendarDay[] = [];
     const today = new Date();
     const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
-    // Primer día del mes
     const firstDayOfMonth = new Date(year, month, 1);
-    // Ajustar para que Lunes sea 0 y Domingo sea 6
     const startDayIndex = (firstDayOfMonth.getDay() + 6) % 7;
 
-    // Días totales del mes actual y del mes anterior
     const daysInCurrentMonth = new Date(year, month + 1, 0).getDate();
     const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-    // 1. Celdas de relleno del mes anterior
     for (let i = startDayIndex - 1; i >= 0; i--) {
       const prevDate = new Date(year, month - 1, daysInPrevMonth - i);
       const dateKey = `${prevDate.getFullYear()}-${prevDate.getMonth()}-${prevDate.getDate()}`;
@@ -110,7 +89,6 @@ export function Calendar() {
       });
     }
 
-    // 2. Días del mes en curso
     for (let day = 1; day <= daysInCurrentMonth; day++) {
       const date = new Date(year, month, day);
       const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -123,7 +101,6 @@ export function Calendar() {
       });
     }
 
-    // 3. Celdas de relleno del mes siguiente para completar la semana (múltiplo de 7)
     const remainingSlots = (7 - (days.length % 7)) % 7;
     for (let i = 1; i <= remainingSlots; i++) {
       const nextDate = new Date(year, month + 1, i);
@@ -185,7 +162,6 @@ export function Calendar() {
       ) : (
         <div className="calendar-wrapper">
           <div className="calendar-grid">
-            {/* Cabecera con nombres de días (Lun - Dom) */}
             <div className="calendar-weekdays">
               {WEEKDAYS.map((day) => (
                 <div key={day} className="calendar-weekday">
@@ -194,7 +170,6 @@ export function Calendar() {
               ))}
             </div>
 
-            {/* Celdas de días del calendario */}
             <div className="calendar-days-container">
               {calendarDays.map((cell) => {
                 const dayTasks = tasksByDate.get(cell.dateKey) || [];
@@ -218,7 +193,6 @@ export function Calendar() {
                       )}
                     </div>
 
-                    {/* Lista apilada de tareas dentro del día */}
                     <div className="calendar-day-tasks">
                       {dayTasks.map((task) => (
                         <div

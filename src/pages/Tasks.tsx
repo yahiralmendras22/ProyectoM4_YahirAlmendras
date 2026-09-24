@@ -1,35 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Task } from '../types/task';
 import { useAuth } from '../features/auth/AuthContext';
-import {
-  subscribeToTasks,
-  createTask,
-  toggleTaskCompleted,
-  deleteTask,
-} from '../services/tasksService';
+import { useTasks } from '../hooks/useTasks';
+import { createTask, toggleTaskCompleted, deleteTask } from '../services/tasksService';
 
 export function Tasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailStatus, setEmailStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const { user, logout } = useAuth();
+  const { tasks, loading } = useTasks(user?.uid);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) return;
-
-    const unsubscribe = subscribeToTasks(user.uid, (updatedTasks) => {
-      setTasks(updatedTasks);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [user]);
 
   async function handleLogout() {
     await logout();
