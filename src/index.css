@@ -966,6 +966,64 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
 
+/* Modal para crear tarea desde el calendario */
+.calendar-day.clickable {
+  cursor: pointer;
+}
+
+.calendar-day.clickable:hover {
+  background-color: var(--color-primary-light);
+}
+
+.calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.calendar-modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.calendar-modal h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.calendar-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.calendar-modal-actions button {
+  flex: 1;
+  width: auto;
+}
+
+.btn-cancel {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-muted);
+  border: 1.5px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+  background-color: var(--border-color);
+}
+
 /* Ajustes Responsivos para Tablets y Desktop */
 @media (min-width: 640px) {
   .calendar-header {

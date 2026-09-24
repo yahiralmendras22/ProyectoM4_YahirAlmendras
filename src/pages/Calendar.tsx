@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Task } from '../types/task';
 import { useAuth } from '../features/auth/AuthContext';
 import { useTasks } from '../hooks/useTasks';
+import { createTask } from '../services/tasksService';
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
@@ -30,6 +31,9 @@ interface CalendarDay {
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(() => new Date());
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newDescription, setNewDescription] = useState('');
   const { user } = useAuth();
   const { tasks, loading } = useTasks(user?.uid);
 
@@ -47,6 +51,32 @@ export function Calendar() {
   const handleToday = () => {
     setCurrentDate(new Date());
   };
+
+  function handleDayClick(date: Date) {
+    setSelectedDay(date);
+    setNewTitle('');
+    setNewDescription('');
+  }
+
+  function closeModal() {
+    setSelectedDay(null);
+  }
+
+  async function handleCreateTask(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user || !selectedDay || !newTitle.trim()) return;
+
+    await createTask({
+      userId: user.uid,
+      title: newTitle,
+      description: newDescription,
+      completed: false,
+      priority: 'medium',
+      dueDate: selectedDay,
+    });
+
+    closeModal();
+  }
 
   const tasksByDate = useMemo(() => {
     const map = new Map<string, Task[]>();
@@ -124,7 +154,7 @@ export function Calendar() {
           <h1 className="calendar-title">
             📅 {MONTH_NAMES[month]} {year}
           </h1>
-          <p className="calendar-subtitle">Vista mensual de tareas con fecha de vencimiento</p>
+          <p className="calendar-subtitle">Vista mensual de tareas con fecha de vencimiento — hacé click en un día para agregar una tarea</p>
         </div>
 
         <div className="calendar-controls">
@@ -177,9 +207,12 @@ export function Calendar() {
                 return (
                   <div
                     key={cell.dateKey}
-                    className={`calendar-day ${
+                    className={`calendar-day clickable ${
                       !cell.isCurrentMonth ? 'calendar-day-other-month' : ''
                     } ${cell.isToday ? 'calendar-day-today' : ''}`}
+                    onClick={() => handleDayClick(cell.date)}
+                    role="button"
+                    tabIndex={0}
                   >
                     <div className="calendar-day-header">
                       <span className="calendar-day-number">{cell.dayNumber}</span>
@@ -215,6 +248,46 @@ export function Calendar() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {selectedDay && (
+        <div className="calendar-modal-overlay" onClick={closeModal}>
+          <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>
+              Nueva tarea — {selectedDay.toLocaleDateString('es-AR', {
+                day: 'numeric',
+                month: 'long',
+              })}
+            </h3>
+            <form onSubmit={handleCreateTask}>
+              <div>
+                <label htmlFor="modal-title">Título</label>
+                <input
+                  id="modal-title"
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  required
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label htmlFor="modal-description">Descripción</label>
+                <textarea
+                  id="modal-description"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                />
+              </div>
+              <div className="calendar-modal-actions">
+                <button type="button" className="btn-cancel" onClick={closeModal}>
+                  Cancelar
+                </button>
+                <button type="submit">Agregar</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
