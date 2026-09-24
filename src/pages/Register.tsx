@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { passwordsMatch } from '../utils/validation';
+import { getAuthErrorMessage } from '../utils/authErrors';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ export function Register() {
     e.preventDefault();
     setError('');
 
-    if (passwordsMatch(password, confirmPassword)) {
+    if (!passwordsMatch(password, confirmPassword)) {
       setError('Las contraseñas no coinciden');
       return;
     }
@@ -23,8 +24,8 @@ export function Register() {
     try {
       await signUp(email, password);
       navigate('/tasks');
-    } catch {
-      setError('No se pudo completar el registro');
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
     }
   }
 
@@ -33,8 +34,8 @@ export function Register() {
     try {
       await signInWithGoogle();
       navigate('/tasks');
-    } catch {
-      setError('No se pudo registrar con Google');
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
     }
   }
 

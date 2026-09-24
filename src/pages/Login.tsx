@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
+import { getAuthErrorMessage } from '../utils/authErrors';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -16,8 +17,8 @@ export function Login() {
     try {
       await signIn(email, password);
       navigate('/tasks');
-    } catch {
-      setError('Email o contraseña incorrectos');
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
     }
   }
 
@@ -26,8 +27,8 @@ export function Login() {
     try {
       await signInWithGoogle();
       navigate('/tasks');
-    } catch {
-      setError('No se pudo iniciar sesión con Google');
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
     }
   }
 
