@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
+import { passwordsMatch } from '../utils/validation';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ export function Register() {
     e.preventDefault();
     setError('');
 
-    if (password !== confirmPassword) {
+    if (passwordsMatch(password, confirmPassword)) {
       setError('Las contraseñas no coinciden');
       return;
     }
