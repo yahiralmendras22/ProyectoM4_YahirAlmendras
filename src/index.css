@@ -11,13 +11,13 @@
    Paleta de productividad moderna: Azul/Índigo, Violeta y Verde Esmeralda
    -------------------------------------------------------------------------- */
 :root {
-  /* Colores Principales (Índigo & Violeta) */
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
-  --color-primary-light: #eef2ff;
-  --color-primary-glow: rgba(99, 102, 241, 0.35);
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+ /* Colores Principales (Verde yerba mate) */
+  --color-primary: #5e9c3a;
+  --color-primary-hover: #4a7d2e;
+  --color-primary-light: #eef7e8;
+  --color-primary-glow: rgba(94, 156, 58, 0.35);
+  --gradient-primary: linear-gradient(135deg, #5e9c3a 0%, #8fbf5a 100%);
+  --gradient-hover: linear-gradient(135deg, #4a7d2e 0%, #6fa347 100%);  
 
   /* Acento de Éxito / Completado (Verde Esmeralda) */
   --color-success: #10b981;
