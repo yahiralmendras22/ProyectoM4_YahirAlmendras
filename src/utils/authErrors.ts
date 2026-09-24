@@ -1,11 +1,7 @@
-import { FirebaseError } from 'firebase/app';
-
 export function getAuthErrorMessage(error: unknown): string {
-  if (!(error instanceof FirebaseError)) {
-    return 'Ocurrió un error inesperado. Intentá de nuevo.';
-  }
+  const code = hasErrorCode(error) ? error.code : undefined;
 
-  switch (error.code) {
+  switch (code) {
     case 'auth/invalid-email':
       return 'El email ingresado no es válido.';
     case 'auth/user-not-found':
@@ -24,4 +20,13 @@ export function getAuthErrorMessage(error: unknown): string {
     default:
       return 'No se pudo completar la operación. Intentá de nuevo.';
   }
+}
+
+function hasErrorCode(error: unknown): error is { code: string } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    typeof (error as { code: unknown }).code === 'string'
+  );
 }
