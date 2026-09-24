@@ -68,26 +68,17 @@ export function Tasks() {
     setSendingEmail(true);
     setEmailStatus('idle');
 
-    const pending = tasks.filter((t) => !t.completed);
-    const completed = tasks.filter((t) => t.completed);
-
-    const summaryLines = [
-      `Resumen de tus tareas (${tasks.length} en total):`,
-      '',
-      `Pendientes (${pending.length}):`,
-      ...pending.map((t) => `- ${t.title}`),
-      '',
-      `Completadas (${completed.length}):`,
-      ...completed.map((t) => `- ${t.title}`),
-    ];
-
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to: user.email,
-          summary: summaryLines.join('\n'),
+          recipient: user.email,
+          tasks: tasks.map((t) => ({
+            title: t.title,
+            description: t.description,
+            completed: t.completed,
+          })),
         }),
       });
 
